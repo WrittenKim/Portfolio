@@ -192,11 +192,30 @@ function playVideo(videoId) {
     }
 }
 
-// YouTube 영상 열기 함수
+// YouTube 영상 열기 함수 - 개선된 버전
 function openYouTubeVideo(videoId) {
     const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
     window.open(youtubeUrl, '_blank');
 }
+
+// YouTube iframe 로딩 에러 처리
+function handleYouTubeError(iframe) {
+    iframe.onerror = function() {
+        console.log('YouTube 영상 로딩 실패, 새 탭에서 열기로 대체');
+        const videoId = iframe.src.split('/embed/')[1];
+        if (videoId) {
+            openYouTubeVideo(videoId);
+        }
+    };
+}
+
+// 모든 YouTube iframe에 에러 처리 적용
+document.addEventListener('DOMContentLoaded', function() {
+    const youtubeIframes = document.querySelectorAll('iframe[src*="youtube.com/embed"]');
+    youtubeIframes.forEach(iframe => {
+        handleYouTubeError(iframe);
+    });
+});
 
 // 영상 플레이스홀더 표시
 function showVideoPlaceholder(videoId) {
