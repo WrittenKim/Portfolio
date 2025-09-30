@@ -48,6 +48,7 @@ navLinks.forEach(link => {
 
 // 스크롤 이벤트 (성능 최적화) - 세로 스크롤
 let scrollTimeout;
+
 window.addEventListener('scroll', () => {
     // 스크롤 이벤트 디바운싱
     clearTimeout(scrollTimeout);
@@ -55,6 +56,80 @@ window.addEventListener('scroll', () => {
         updateScrollProgress();
     }, 10);
 });
+
+// 모바일 스크롤 섹션 이동 기능
+let mobileScrollTimeout;
+let isMobileScrollEnabled = false;
+let isScrolling = false;
+let scrollDirection = 0;
+let lastScrollTop = 0;
+
+// 모바일 환경 감지
+function isMobileDevice() {
+    return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// 모바일 스크롤 핸들러
+function handleMobileScroll(e) {
+    if (!isMobileDevice() || isScrolling) return;
+    
+    const currentScrollTop = window.pageYOffset;
+    const scrollDelta = currentScrollTop - lastScrollTop;
+    
+    // 스크롤 방향 감지
+    if (Math.abs(scrollDelta) > 10) {
+        scrollDirection = scrollDelta > 0 ? 1 : -1;
+        lastScrollTop = currentScrollTop;
+        
+        // 스크롤 섹션 이동
+        clearTimeout(mobileScrollTimeout);
+        mobileScrollTimeout = setTimeout(() => {
+            moveToNextSection(scrollDirection);
+        }, 150);
+    }
+}
+
+// 다음/이전 섹션으로 이동
+function moveToNextSection(direction) {
+    if (isScrolling) return;
+    
+    const currentSectionIndex = getCurrentSectionIndex();
+    const targetSectionIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex + direction));
+    
+    if (targetSectionIndex !== currentSectionIndex) {
+        isScrolling = true;
+        const targetSection = sections[targetSectionIndex];
+        const targetScrollTop = targetSectionIndex * window.innerHeight;
+        
+        window.scrollTo({
+            top: targetScrollTop,
+            behavior: 'smooth'
+        });
+        
+        // 네비게이션 업데이트
+        navLinks.forEach((link, index) => {
+            link.classList.toggle('active', index === targetSectionIndex);
+        });
+        
+        // 애니메이션 트리거
+        setTimeout(() => {
+            animateGameSection(targetSectionIndex);
+            isScrolling = false;
+        }, 700);
+    }
+}
+
+// 모바일 스크롤 이벤트 리스너 추가
+window.addEventListener('scroll', handleMobileScroll, { passive: true });
+
+// 모바일 스크롤 활성화/비활성화
+function toggleMobileScroll() {
+    isMobileScrollEnabled = isMobileDevice();
+}
+
+// 초기화 및 리사이즈 이벤트
+window.addEventListener('load', toggleMobileScroll);
+window.addEventListener('resize', toggleMobileScroll);
 
 // 게임 섹션 애니메이션
 function animateGameSection(sectionIndex) {
@@ -266,7 +341,6 @@ document.addEventListener('keydown', (e) => {
 // 터치 스크롤 지원 (모바일) - 세로 스크롤
 let startY = 0;
 let scrollTop = 0;
-let isScrolling = false;
 let touchStartTime = 0;
 let lastTouchTime = 0;
 
