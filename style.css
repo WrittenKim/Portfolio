@@ -11,6 +11,9 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
     background: #0a0a0a;
+    /* 모바일 터치 스크롤 개선 */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
 }
 
 /* 네비게이션 */
@@ -25,6 +28,9 @@ body {
     padding: 1rem 0;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    /* 터치 이벤트 개선 */
+    touch-action: manipulation;
+    pointer-events: auto;
 }
 
 .nav-container {
@@ -114,6 +120,9 @@ body {
     overflow-y: auto;
     scroll-behavior: smooth;
     margin-top: 80px;
+    /* 모바일 터치 스크롤 개선 */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
 }
 
 .vertical-scroll {

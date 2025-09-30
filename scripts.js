@@ -46,59 +46,53 @@ navLinks.forEach(link => {
     });
 });
 
-// 스크롤 이벤트 (성능 최적화) - 세로 스크롤
+// 통합된 스크롤 이벤트 시스템
 let scrollTimeout;
-
-window.addEventListener('scroll', () => {
-    // 스크롤 이벤트 디바운싱
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-        updateScrollProgress();
-    }, 10);
-});
-
-// 모바일 스크롤 섹션 이동 기능
-let mobileScrollTimeout;
-let isMobileScrollEnabled = false;
 let isScrolling = false;
 let scrollDirection = 0;
 let lastScrollTop = 0;
+let autoScrollTimeout;
 
 // 모바일 환경 감지
 function isMobileDevice() {
     return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
-// 모바일 스크롤 핸들러
-function handleMobileScroll(e) {
-    if (!isMobileDevice() || isScrolling) return;
+// 통합된 스크롤 핸들러
+function handleUnifiedScroll() {
+    if (isScrolling) return;
     
     const currentScrollTop = window.pageYOffset;
     const scrollDelta = currentScrollTop - lastScrollTop;
     
-    // 스크롤 방향 감지
-    if (Math.abs(scrollDelta) > 10) {
+    // 스크롤 이벤트 디바운싱
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+        updateScrollProgress();
+    }, 10);
+    
+    // 데스크톱에서만 섹션 자동 맞춤 기능 활성화 (모바일에서는 비활성화)
+    if (!isMobileDevice() && Math.abs(scrollDelta) > 10) {
         scrollDirection = scrollDelta > 0 ? 1 : -1;
         lastScrollTop = currentScrollTop;
         
-        // 스크롤 섹션 이동
-        clearTimeout(mobileScrollTimeout);
-        mobileScrollTimeout = setTimeout(() => {
-            moveToNextSection(scrollDirection);
-        }, 150);
+        // 자동 섹션 맞춤 (데스크톱에서만)
+        clearTimeout(autoScrollTimeout);
+        autoScrollTimeout = setTimeout(() => {
+            autoSnapToSection();
+        }, 200);
     }
 }
 
-// 다음/이전 섹션으로 이동
-function moveToNextSection(direction) {
+// 자동 섹션 맞춤 함수
+function autoSnapToSection() {
     if (isScrolling) return;
     
     const currentSectionIndex = getCurrentSectionIndex();
-    const targetSectionIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex + direction));
+    const targetSectionIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex + scrollDirection));
     
     if (targetSectionIndex !== currentSectionIndex) {
         isScrolling = true;
-        const targetSection = sections[targetSectionIndex];
         const targetScrollTop = targetSectionIndex * window.innerHeight;
         
         window.scrollTo({
@@ -119,17 +113,8 @@ function moveToNextSection(direction) {
     }
 }
 
-// 모바일 스크롤 이벤트 리스너 추가
-window.addEventListener('scroll', handleMobileScroll, { passive: true });
-
-// 모바일 스크롤 활성화/비활성화
-function toggleMobileScroll() {
-    isMobileScrollEnabled = isMobileDevice();
-}
-
-// 초기화 및 리사이즈 이벤트
-window.addEventListener('load', toggleMobileScroll);
-window.addEventListener('resize', toggleMobileScroll);
+// 통합된 스크롤 이벤트 리스너
+window.addEventListener('scroll', handleUnifiedScroll, { passive: true });
 
 // 게임 섹션 애니메이션
 function animateGameSection(sectionIndex) {
@@ -338,63 +323,38 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// 터치 스크롤 지원 (모바일) - 세로 스크롤
+// 터치 스크롤 지원 (모바일) - 통합된 버전
 let startY = 0;
 let scrollTop = 0;
 let touchStartTime = 0;
-let lastTouchTime = 0;
+let touchMoved = false;
 
-mainContainer.addEventListener('touchstart', (e) => {
-    startY = e.touches[0].pageY - mainContainer.offsetTop;
-    scrollTop = mainContainer.scrollTop;
-    isScrolling = true;
+// 터치 이벤트를 body에 직접 적용하여 UI 간섭 방지
+document.addEventListener('touchstart', (e) => {
+    if (!isMobileDevice()) return;
+    
+    startY = e.touches[0].pageY;
+    scrollTop = window.pageYOffset;
     touchStartTime = Date.now();
-    lastTouchTime = touchStartTime;
+    touchMoved = false;
     
-    // 터치 시작 시 스크롤 중단
-    mainContainer.style.scrollBehavior = 'auto';
-});
+    // 터치 시작 시 자동 스크롤 일시 중단
+    clearTimeout(autoScrollTimeout);
+}, { passive: true });
 
-mainContainer.addEventListener('touchmove', (e) => {
-    if (!isScrolling) return;
+document.addEventListener('touchmove', (e) => {
+    if (!isMobileDevice()) return;
     
-    e.preventDefault(); // 기본 스크롤 방지
-    
-    const y = e.touches[0].pageY - mainContainer.offsetTop;
-    const walk = (y - startY) * 1.5; // 스크롤 민감도 조정
-    mainContainer.scrollTop = scrollTop - walk;
-    
-    lastTouchTime = Date.now();
-});
+    touchMoved = true;
+    // 모바일에서는 자동 섹션 맞춤 비활성화 - 자연스러운 스크롤만 허용
+}, { passive: true });
 
-mainContainer.addEventListener('touchend', (e) => {
-    if (!isScrolling) return;
+document.addEventListener('touchend', (e) => {
+    if (!isMobileDevice()) return;
     
-    isScrolling = false;
-    const touchDuration = Date.now() - touchStartTime;
-    const swipeDistance = Math.abs(mainContainer.scrollTop - scrollTop);
-    
-    // 빠른 스와이프 감지 (섹션 전환)
-    if (touchDuration < 300 && swipeDistance > 50) {
-        const currentSectionIndex = getCurrentSectionIndex();
-        const direction = mainContainer.scrollTop > scrollTop ? 1 : -1;
-        const targetSectionIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex + direction));
-        
-        const targetScrollTop = targetSectionIndex * window.innerHeight;
-        mainContainer.scrollTo({
-            top: targetScrollTop,
-            behavior: 'smooth'
-        });
-        
-        // 네비게이션 업데이트
-        navLinks.forEach((link, index) => {
-            link.classList.toggle('active', index === targetSectionIndex);
-        });
-    }
-    
-    // 부드러운 스크롤 복원
-    mainContainer.style.scrollBehavior = 'smooth';
-});
+    // 모바일에서는 자연스러운 스크롤만 허용 - 자동 섹션 맞춤 비활성화
+    touchMoved = false;
+}, { passive: true });
 
 // 모바일 네비게이션 메뉴 토글 (작은 화면용)
 function createMobileMenu() {
