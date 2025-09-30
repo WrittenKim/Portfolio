@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게임 개발자 포트폴리오</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2><i class="fas fa-gamepad"></i> Game Portfolio</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#mykey-crush" class="nav-link">MikeCrush</a>
+                <a href="#gambyeol-market" class="nav-link">감별마켓</a>
+                <a href="#last-station" class="nav-link">Last Station</a>
+                <a href="#4mining" class="nav-link">4Mining</a>
+                <a href="#enter-gungeon" class="nav-link">엔터더건전</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 컨테이너 -->
+    <div class="main-container">
+        <div class="vertical-scroll">
+            <!-- 홈 섹션 -->
+            <section class="section" id="home">
+                <div class="section-content">
+                    <div class="hero-content">
+                        <h1 class="hero-title">게임 개발자</h1>
+                        <h2 class="hero-subtitle">포트폴리오</h2>
+                        <p class="hero-description">
+                            Unity 기반 게임 개발 전문가로, 멀티플레이어 환경부터 라이브 서비스까지<br>
+                            다양한 장르의 게임을 개발하고 운영한 경험을 보유하고 있습니다.
+                        </p>
+                        <div class="hero-stats">
+                        <div class="stat-item">
+                            <h3>20+</h3>
+                            <p>게임 프로젝트</p>
+                        </div>
+                            <div class="stat-item">
+                                <h3>2년+</h3>
+                                <p>라이브 서비스</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>50명</h3>
+                                <p>최대 동시접속</p>
+                            </div>
+                        </div>
+                        <div class="hero-buttons">
+                            <button class="btn btn-primary" onclick="scrollToSection('mykey-crush')">
+                                <i class="fas fa-play"></i> 프로젝트 보기
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="game-icons">
+                            <div class="game-icon" data-game="mykey-crush">
+                                <i class="fas fa-puzzle-piece"></i>
+                                <span>MikeCrush</span>
+                            </div>
+                            <div class="game-icon" data-game="gambyeol-market">
+                                <i class="fas fa-trophy"></i>
+                                <span>감별마켓</span>
+                            </div>
+                            <div class="game-icon" data-game="last-station">
+                                <i class="fas fa-skull"></i>
+                                <span>Last Station</span>
+                            </div>
+                            <div class="game-icon" data-game="4mining">
+                                <i class="fas fa-gem"></i>
+                                <span>4Mining</span>
+                            </div>
+                            <div class="game-icon" data-game="enter-gungeon">
+                                <i class="fas fa-crosshairs"></i>
+                                <span>엔터더건전</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MyKey Crush 섹션 -->
+            <section class="section game-section" id="mykey-crush">
+                <div class="section-content">
+                    <div class="game-header">
+                        <div class="game-info">
+                            <h1 class="game-title">MikeCrush</h1>
+                            <div class="game-meta">
+                                <span class="game-genre">퍼즐 게임</span>
+                                <span class="game-platform">모바일/PC</span>
+                            </div>
+                            <div class="game-tech">
+                                <span class="tech-tag">Unity (C#)</span>
+                                <span class="tech-tag">Gitlab</span>
+                                <span class="tech-tag">Protobuf</span>
+                            </div>
+                        </div>
+                        <div class="game-video">
+                            <div class="video-container">
+                                <div class="image-gallery">
+                                    <div class="image-item" onclick="openImageModal('mobile_page.gif', 'MikeCrush 모바일 게임플레이')">
+                                        <img src="mobile_page.gif" alt="MikeCrush 모바일 게임플레이" class="game-image">
+                                        <div class="image-label">모바일 버전</div>
+                                    </div>
+                                    <div class="image-item" onclick="openImageModal('pc_page.png', 'MikeCrush PC 게임플레이')">
+                                        <img src="pc_page.png" alt="MikeCrush PC 게임플레이" class="game-image">
+                                        <div class="image-label">PC 버전</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-details">
+                        <div class="detail-section">
+                            <h3><i class="fas fa-code"></i> 개발 역할</h3>
+                            <p>클라이언트 프로그래밍 전반</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3><i class="fas fa-users"></i> 핵심 성과</h3>
+                            <p>최대 50인이 동시에 접속하여 상호작용하는 멀티플레이어 환경에서 클라이언트 개발을 담당했습니다. 다수의 유저 동기화 및 안정성 확보를 최우선 목표로, 효율적인 네트워크 패킷(Protobuf) 처리 로직을 설계하고 구현했습니다.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3><i class="fas fa-star"></i> 강조 포인트</h3>
+                            <p>멀티플레이어 환경 개발 경험을 통해 고동시성 환경에서의 클라이언트-서버 통신 최적화 및 예외 상황 처리 능력을 입증했습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 감별마켓 섹션 -->
+            <section class="section game-section" id="gambyeol-market">
+                <div class="section-content">
+                    <div class="game-header">
+                        <div class="game-info">
+                            <h1 class="game-title">감별마켓</h1>
+                            <div class="game-meta">
+                                <span class="game-genre">랭킹형 미니게임 천국</span>
+                                <span class="game-platform">모바일/PC</span>
+                            </div>
+                            <div class="game-tech">
+                                <span class="tech-tag">TypeScript</span>
+                                <span class="tech-tag">Cocos Creator</span>
+                                <span class="tech-tag">Live Service</span>
+                            </div>
+                        </div>
+                        <div class="game-video">
+                            <div class="video-container">
+                                <iframe 
+                                    id="gambyeol-video" 
+                                    src="https://www.youtube.com/embed/DzS9wePahRM?si=example" 
+                                    title="감별마켓 게임플레이 영상"
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    allowfullscreen>
+                                </iframe>
+                                <div class="video-overlay" onclick="openYouTubeVideo('DzS9wePahRM')">
+                                    <button class="play-btn">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-details">
+                        <div class="detail-section">
+                            <h3><i class="fas fa-code"></i> 개발 역할</h3>
+                            <p>클라이언트 프로그래밍 전반</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3><i class="fas fa-trophy"></i> 핵심 성과</h3>
+                            <p>랭킹형 미니게임 천국으로서 다양한 미니게임들을 통합한 플랫폼을 개발했습니다. TypeScript와 Cocos Creator를 활용하여 크로스 플랫폼 게임 개발 경험을 쌓았으며, 라이브 서비스 운영을 통해 지속적인 콘텐츠 업데이트와 사용자 피드백 반영 시스템을 구축했습니다.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3><i class="fas fa-star"></i> 강조 포인트</h3>
+                            <p>다양한 미니게임의 통합 관리 및 라이브 서비스 운영 경험. 사용자 참여도를 높이기 위한 랭킹 시스템과 리워드 시스템을 구현하여 게임의 재미와 지속성을 동시에 확보했습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Last Station 섹션 -->
+            <section class="section game-section" id="last-station">
+                <div class="section-content">
+                    <div class="game-header">
+                        <div class="game-info">
+                            <h1 class="game-title">Last Station</h1>
+                            <div class="game-meta">
+                                <span class="game-genre">뱀파이어 서바이벌 형 RPG</span>
+                                <span class="game-platform">웹</span>
+                            </div>
+                            <div class="game-tech">
+                                <span class="tech-tag">Unity</span>
+                                <span class="tech-tag">Custom Shader</span>
+                                <span class="tech-tag">C#</span>
+                            </div>
+                        </div>
+                        <div class="game-video">
+                            <div class="video-container">
+                                <iframe 
+                                    id="laststation-video" 
+                                    src="https://www.youtube.com/embed/5xPjVHDgFDE?si=example" 
+                                    title="Last Station 게임플레이 영상"
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    allowfullscreen>
+                                </iframe>
+                                <div class="video-overlay" onclick="openYouTubeVideo('5xPjVHDgFDE')">
+                                    <button class="play-btn">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-details">
+                        <div class="detail-section">
+                            <h3><i class="fas fa-code"></i> 개발 역할</h3>
+                            <p>클라이언트 프로그래밍 전반</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3><i class="fas fa-paint-brush"></i> 핵심 성과</h3>
+                            <p>시각적 퀄리티와 퍼포먼스 최적화를 동시에 달성한 프로젝트입니다. 캐릭터 및 오브젝트의 경계 표현에 디졸브 셰이더를 적용하여 독특한 바닥 연출을 구현했습니다.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3><i class="fas fa-star"></i> 강조 포인트</h3>
+                            <p>커스텀 셰이더를 활용한 최적화 및 그래픽 연출. 저사양 웹 환경을 고려하여 Unity의 기본 HDR 파이프라인 대신 커스텀 셰이더를 사용하여 Bloom 효과를 구현하고 최적화했습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4Mining 섹션 -->
+            <section class="section game-section" id="4mining">
+                <div class="section-content">
+                    <div class="game-header">
+                        <div class="game-info">
+                            <h1 class="game-title">4Mining</h1>
+                            <div class="game-meta">
+                                <span class="game-genre">퍼즐</span>
+                                <span class="game-platform">iOS/Android</span>
+                            </div>
+                            <div class="game-tech">
+                                <span class="tech-tag">Unity</span>
+                                <span class="tech-tag">Asset Protection</span>
+                                <span class="tech-tag">iOS/Android SDK</span>
+                            </div>
+                        </div>
+                        <div class="game-video">
+                            <div class="video-container">
+                                <iframe 
+                                    id="4mining-video" 
+                                    src="https://www.youtube.com/embed/tO8AoATArrg?si=example" 
+                                    title="4Mining 게임플레이 영상"
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    allowfullscreen>
+                                </iframe>
+                                <div class="video-overlay" onclick="openYouTubeVideo('tO8AoATArrg')">
+                                    <button class="play-btn">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-details">
+                        <div class="detail-section">
+                            <h3><i class="fas fa-code"></i> 개발 역할</h3>
+                            <p>보안, 빌드</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3><i class="fas fa-shield-alt"></i> 핵심 성과</h3>
+                            <p>프로젝트의 안정적인 서비스 환경 구축을 목표로 보안 및 빌드 과정을 담당했습니다. Unity 에셋 보호 솔루션을 적용하여 리소스 무단 추출을 방지했으며, 실제 디컴파일 테스트를 통해 보안 기능의 작동을 검증했습니다.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3><i class="fas fa-star"></i> 강조 포인트</h3>
+                            <p>서비스 보안 및 크로스 플랫폼 빌드 경험. iOS 및 Android 환경에 대한 크로스 플랫폼 빌드를 성공적으로 수행하고 운영하여, 각 플랫폼별 특성 이해 및 배포 파이프라인 관리 능력을 확보했습니다.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3><i class="fas fa-download"></i> 다운로드</h3>
+                            <div class="store-buttons">
+                                <a href="https://play.google.com/store/apps/details?id=com.ftred.FourMining&hl=ko" target="_blank" class="store-btn playstore-btn">
+                                    <i class="fab fa-google-play"></i>
+                                    <span>Google Play</span>
+                                </a>
+                                <a href="https://apps.apple.com/us/app/4-mining/id6739566263" target="_blank" class="store-btn appstore-btn">
+                                    <i class="fab fa-apple"></i>
+                                    <span>App Store</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enter Gungeon 섹션 -->
+            <section class="section game-section" id="enter-gungeon">
+                <div class="section-content">
+                    <div class="game-header">
+                        <div class="game-info">
+                            <h1 class="game-title">엔터더건전 모작</h1>
+                            <div class="game-meta">
+                                <span class="game-genre">액션/어드벤처</span>
+                                <span class="game-platform">PC</span>
+                            </div>
+                            <div class="game-tech">
+                                <span class="tech-tag">DirectX</span>
+                                <span class="tech-tag">C++</span>
+                                <span class="tech-tag">자체 맵툴</span>
+                            </div>
+                        </div>
+                        <div class="game-video">
+                            <div class="video-container">
+                                <iframe 
+                                    id="enter-gungeon-video" 
+                                    src="https://www.youtube.com/embed/JK-Q-SuE4j0?si=example" 
+                                    title="엔터더건전 모작 게임플레이 영상"
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    allowfullscreen>
+                                </iframe>
+                                <div class="video-overlay" onclick="openYouTubeVideo('JK-Q-SuE4j0')">
+                                    <button class="play-btn">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-details">
+                        <div class="detail-section">
+                            <h3><i class="fas fa-code"></i> 개발 역할</h3>
+                            <p>전체 게임 프로그래밍 및 툴 개발</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3><i class="fas fa-trophy"></i> 핵심 성과</h3>
+                            <p>전국대회에서 은상 입상이라는 뛰어난 성과를 달성했습니다. DirectX를 활용한 저수준 그래픽 프로그래밍으로 고성능 게임을 구현했으며, 자체 맵툴을 개발하여 효율적인 개발 프로세스를 구축했습니다.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3><i class="fas fa-star"></i> 강조 포인트</h3>
+                            <p>실무 경험 없이도 전국대회 은상이라는 결과를 통해 뛰어난 도전 정신과 잠재력을 입증했습니다. DirectX를 통한 저수준 프로그래밍 경험과 자체 툴 개발을 통한 엔지니어링 마인드를 보여줍니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- 스크롤 인디케이터 -->
+    <div class="scroll-indicator">
+        <div class="scroll-progress"></div>
+    </div>
+
+    <!-- 영상 모달 -->
+    <div class="video-modal" id="videoModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <video id="modalVideo" controls>
+                <source src="#" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <!-- 이미지 모달 -->
+    <div class="image-modal" id="imageModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeImageModal()">&times;</span>
+            <img id="modalImage" src="" alt="">
+            <div class="image-info">
+                <h3 id="imageTitle"></h3>
+                <p>영상의 경우 면접 시 따로 보여드리겠습니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
