@@ -12,6 +12,13 @@ navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
         
+        // 수동 네비게이션 시작
+        isManualNavigation = true;
+        isScrolling = true;
+        
+        // 자동 스크롤 타임아웃 클리어
+        clearTimeout(autoScrollTimeout);
+        
         // 클릭된 버튼에 피드백 효과
         link.style.transform = 'scale(0.95)';
         setTimeout(() => {
@@ -41,6 +48,9 @@ navLinks.forEach(link => {
             setTimeout(() => {
                 const sectionIndex = Array.from(sections).indexOf(targetSection);
                 animateGameSection(sectionIndex);
+                
+                // 스크롤링 상태만 해제, 수동 네비게이션은 사용자가 스크롤할 때까지 유지
+                isScrolling = false;
             }, 700);
         }
     });
@@ -52,15 +62,16 @@ let isScrolling = false;
 let scrollDirection = 0;
 let lastScrollTop = 0;
 let autoScrollTimeout;
+let isManualNavigation = false; // 수동 네비게이션 플래그
 
 // 모바일 환경 감지
 function isMobileDevice() {
     return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
-// 통합된 스크롤 핸들러
-function handleUnifiedScroll() {
-    if (isScrolling) return;
+// PC용 스크롤 핸들러 (기존 동작 복원)
+function handlePCScroll() {
+    if (isScrolling || isManualNavigation) return;
     
     const currentScrollTop = window.pageYOffset;
     const scrollDelta = currentScrollTop - lastScrollTop;
@@ -71,22 +82,47 @@ function handleUnifiedScroll() {
         updateScrollProgress();
     }, 10);
     
-    // 데스크톱에서만 섹션 자동 맞춤 기능 활성화 (모바일에서는 비활성화)
-    if (!isMobileDevice() && Math.abs(scrollDelta) > 10) {
+    // 사용자가 실제로 스크롤을 시작했을 때 수동 네비게이션 상태 해제
+    if (isManualNavigation && Math.abs(scrollDelta) > 10) {
+        isManualNavigation = false;
+    }
+    
+    // PC에서만 섹션 자동 맞춤 (더 엄격한 조건, 수동 네비게이션 중에는 비활성화)
+    if (!isMobileDevice() && !isManualNavigation && Math.abs(scrollDelta) > 50) {
         scrollDirection = scrollDelta > 0 ? 1 : -1;
         lastScrollTop = currentScrollTop;
         
-        // 자동 섹션 맞춤 (데스크톱에서만)
+        // 자동 섹션 맞춤 (PC에서만, 더 긴 지연시간)
         clearTimeout(autoScrollTimeout);
         autoScrollTimeout = setTimeout(() => {
             autoSnapToSection();
-        }, 200);
+        }, 500);
+    }
+}
+
+// 모바일용 스크롤 핸들러 (자연스러운 스크롤만)
+function handleMobileScroll() {
+    if (isScrolling) return;
+    
+    // 스크롤 이벤트 디바운싱만 수행
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+        updateScrollProgress();
+    }, 10);
+}
+
+// 통합된 스크롤 핸들러
+function handleUnifiedScroll() {
+    if (isMobileDevice()) {
+        handleMobileScroll();
+    } else {
+        handlePCScroll();
     }
 }
 
 // 자동 섹션 맞춤 함수
 function autoSnapToSection() {
-    if (isScrolling) return;
+    if (isScrolling || isManualNavigation) return;
     
     const currentSectionIndex = getCurrentSectionIndex();
     const targetSectionIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex + scrollDirection));
@@ -264,6 +300,13 @@ function closeImageModal() {
 
 // 섹션으로 스크롤하는 함수 - 세로 스크롤
 function scrollToSection(sectionId) {
+    // 수동 네비게이션 시작
+    isManualNavigation = true;
+    isScrolling = true;
+    
+    // 자동 스크롤 타임아웃 클리어
+    clearTimeout(autoScrollTimeout);
+    
     const targetSection = document.getElementById(sectionId);
     if (targetSection) {
         // 섹션의 실제 위치로 스크롤
@@ -281,6 +324,9 @@ function scrollToSection(sectionId) {
         if (targetLink) {
             targetLink.classList.add('active');
         }
+        
+        // 스크롤링 상태만 해제, 수동 네비게이션은 사용자가 스크롤할 때까지 유지
+        isScrolling = false;
     }
 }
 
@@ -299,39 +345,42 @@ gameIcons.forEach(icon => {
 //     // 기본 세로 스크롤 동작 사용
 // });
 
-// 키보드 네비게이션 - 세로 스크롤
+// 키보드 네비게이션 - PC에서만 활성화
 document.addEventListener('keydown', (e) => {
-    const currentScrollTop = mainContainer.scrollTop;
+    // 모바일에서는 키보드 네비게이션 비활성화
+    if (isMobileDevice()) return;
+    
+    const currentScrollTop = window.pageYOffset;
     const sectionHeight = window.innerHeight;
     
     switch(e.key) {
         case 'ArrowUp':
             e.preventDefault();
             const targetScrollTopUp = Math.max(0, currentScrollTop - sectionHeight);
-            mainContainer.scrollTo({
+            window.scrollTo({
                 top: targetScrollTopUp,
                 behavior: 'smooth'
             });
             break;
         case 'ArrowDown':
             e.preventDefault();
-            const targetScrollTopDown = Math.min(mainContainer.scrollHeight - mainContainer.clientHeight, currentScrollTop + sectionHeight);
-            mainContainer.scrollTo({
+            const targetScrollTopDown = Math.min(document.documentElement.scrollHeight - window.innerHeight, currentScrollTop + sectionHeight);
+            window.scrollTo({
                 top: targetScrollTopDown,
                 behavior: 'smooth'
             });
             break;
         case 'Home':
             e.preventDefault();
-            mainContainer.scrollTo({
+            window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
             break;
         case 'End':
             e.preventDefault();
-            mainContainer.scrollTo({
-                top: mainContainer.scrollHeight,
+            window.scrollTo({
+                top: document.documentElement.scrollHeight,
                 behavior: 'smooth'
             });
             break;
